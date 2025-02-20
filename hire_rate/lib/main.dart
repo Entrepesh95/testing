@@ -1,5 +1,24 @@
 import 'package:flutter/material.dart';
 
+// Job Post Modell
+class JobPost {
+  final String userName;
+  final String location;
+  final String imageUrl;
+  final String jobTitle;
+  final String hourlyRate;
+  final String date;
+
+  JobPost({
+    required this.userName,
+    required this.location,
+    required this.imageUrl,
+    required this.jobTitle,
+    required this.hourlyRate,
+    required this.date,
+  });
+}
+
 void main() {
   runApp(const MyApp());
 }
@@ -10,9 +29,49 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Job App',
+      title: 'HireRate',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF2196F3),
+          primary: const Color(0xFF2196F3),
+          secondary: Colors.white,
+        ),
+        // main colors
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
+          ),
+        ),
+        // button Ui (need more styleing)
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF2196F3),
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 32,
+              vertical: 16,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+        ),
       ),
       home: const HomePage(),
     );
@@ -20,47 +79,73 @@ class MyApp extends StatelessWidget {
 }
 
 // ================ HOME PAGE SECTION ================
-// Landing page with options to login or sign up
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Welcome to JobFinder',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.blue.shade400,
+              Colors.blue.shade700,
+            ],
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  'HR',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 48),
-            // Login button
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                );
-              },
-              child: const Text('Login'),
-            ),
-            const SizedBox(height: 16),
-            // Sign up button
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SignUpPage()),
-                );
-              },
-              child: const Text('Sign Up'),
-            ),
-          ],
+              const SizedBox(height: 48),
+              const Text(
+                'Welcome to HireRate',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 48),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                child: const Text('Login'),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SignUpPage()),
+                  );
+                },
+                child: const Text('Sign Up'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -68,7 +153,6 @@ class HomePage extends StatelessWidget {
 }
 
 // ================ SIGN UP PAGE SECTION ================
-// Registration page with user information collection
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
@@ -79,7 +163,6 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   DateTime? selectedDate;
 
-  // Date picker functionality
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -94,7 +177,6 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-  // Date formatting helper
   String _formatDate(DateTime date) {
     return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
   }
@@ -102,81 +184,113 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign Up'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Personal information fields
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'First Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Last Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Date of birth selector
-            InkWell(
-              onTap: () => _selectDate(context),
-              child: InputDecorator(
-                decoration: const InputDecoration(
-                  labelText: 'Date of Birth',
-                  border: OutlineInputBorder(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.blue.shade400,
+              Colors.blue.shade700,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 40),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text(
+                    'HR',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
                 ),
-                child: Text(
-                  selectedDate != null
-                      ? _formatDate(selectedDate!)
-                      : 'Select Date',
+                const SizedBox(height: 40),
+                TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'First Name',
+                    prefixIcon: Icon(Icons.person_outline),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 16),
+                TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Last Name',
+                    prefixIcon: Icon(Icons.person_outline),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                InkWell(
+                  onTap: () => _selectDate(context),
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      hintText: 'Birthday',
+                      prefixIcon: Icon(Icons.calendar_today),
+                    ),
+                    child: Text(
+                      selectedDate != null
+                          ? _formatDate(selectedDate!)
+                          : 'Birthday',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Email',
+                    prefixIcon: Icon(Icons.email_outlined),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Phone Number',
+                    prefixIcon: Icon(Icons.phone_outlined),
+                  ),
+                  keyboardType: TextInputType.phone,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Password',
+                    prefixIcon: Icon(Icons.lock_outline),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NewsFeedPage(),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Text('Sign Up'),
+                      SizedBox(width: 8),
+                      Icon(Icons.arrow_forward),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            // Contact information fields
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Phone Number',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 16),
-            // Security field
-            TextField(
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 24),
-            // Account creation button
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const NewsFeedPage()),
-                  (route) => false,
-                );
-              },
-              child: const Text('Create Account'),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -184,56 +298,87 @@ class _SignUpPageState extends State<SignUpPage> {
 }
 
 // ================ LOGIN PAGE SECTION ================
-// User authentication page
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Login credentials fields
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.blue.shade400,
+              Colors.blue.shade700,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text(
+                    'HR',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 48),
+                TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Email',
+                    prefixIcon: Icon(Icons.email_outlined),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Password',
+                    prefixIcon: Icon(Icons.lock_outline),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NewsFeedPage()),
+                    );
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Text('Login'),
+                      SizedBox(width: 8),
+                      Icon(Icons.arrow_forward),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 24),
-            // Login button
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const NewsFeedPage()),
-                );
-              },
-              child: const Text('Login'),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
-// ================ BASE PAGE SECTION ================
-// Template page with bottom navigation
+// ================ BACKGROUND PAGE SECTION ================
 class BasePage extends StatefulWidget {
   final Widget child;
   final int currentIndex;
@@ -253,9 +398,13 @@ class _BasePageState extends State<BasePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: widget.child,
-      // Bottom navigation bar implementation
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: widget.currentIndex,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         onTap: (index) {
           if (index != widget.currentIndex) {
             switch (index) {
@@ -278,21 +427,37 @@ class _BasePageState extends State<BasePage> {
                       builder: (context) => const NotificationsPage()),
                 );
                 break;
+              case 3:
+                break;
+              case 4:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MessagesPage()),
+                );
+                break;
             }
           }
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.newspaper),
-            label: 'News Feed',
+            icon: Icon(Icons.home),
+            label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
-            label: 'Notifications',
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message),
+            label: '',
           ),
         ],
       ),
@@ -301,7 +466,6 @@ class _BasePageState extends State<BasePage> {
 }
 
 // ================ NEWS FEED SECTION ================
-// Main content page showing job listings
 class NewsFeedPage extends StatelessWidget {
   const NewsFeedPage({super.key});
 
@@ -310,58 +474,191 @@ class NewsFeedPage extends StatelessWidget {
     return BasePage(
       currentIndex: 0,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Job Listings'),
-          // Messages access button
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.message),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MessagesPage()),
-                );
-              },
+        body: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(
+                  top: 50, left: 16, right: 16, bottom: 8),
+              color: Colors.blue,
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      const CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.person, color: Colors.blue),
+                      ),
+                      const Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Search',
+                              hintStyle: TextStyle(color: Colors.white70),
+                              prefixIcon:
+                                  Icon(Icons.search, color: Colors.white70),
+                              filled: true,
+                              fillColor: Colors.white24,
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30)),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text(
+                          'Logout',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 2,
+                padding: const EdgeInsets.all(16),
+                itemBuilder: (context, index) {
+                  final posts = [
+                    JobPost(
+                      userName: 'Matt Bridges',
+                      location: 'England, London',
+                      imageUrl: 'driver_image.jpg',
+                      jobTitle: 'Looking for driver',
+                      hourlyRate: '£20 PH',
+                      date: '12 Feb 2025',
+                    ),
+                    JobPost(
+                      userName: 'Dennis Fawart',
+                      location: 'England, Bristol',
+                      imageUrl: 'cleaning_image.jpg',
+                      jobTitle: 'Cleaning service',
+                      hourlyRate: '£23 PH',
+                      date: '10 Feb 2025',
+                    ),
+                  ];
+
+                  final post = posts[index];
+
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              const CircleAvatar(
+                                child: Icon(Icons.person),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      post.userName,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      post.location,
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                post.date,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 200,
+                          width: double.infinity,
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.image, size: 50),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    post.jobTitle,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    post.hourlyRate,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  _buildActionButton(
+                                      Icons.remove_red_eye, 'View'),
+                                  _buildActionButton(
+                                      Icons.bookmark_border, 'Save'),
+                                  _buildActionButton(Icons.share, 'Share'),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
-        // Job listings list
-        body: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return Card(
-              margin: const EdgeInsets.all(8.0),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Software Developer Position ${index + 1}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text('Company Name'),
-                    const SizedBox(height: 8),
-                    const Text('Location: New York, NY'),
-                    const SizedBox(height: 8),
-                    const Text('Salary: \$80,000 - \$120,000'),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
       ),
+    );
+  }
+
+  Widget _buildActionButton(IconData icon, String label) {
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: Colors.grey[600]),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: TextStyle(color: Colors.grey[600]),
+        ),
+      ],
     );
   }
 }
 
 // ================ PROFILE SECTION ================
-// User profile information and settings
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
@@ -372,18 +669,17 @@ class ProfilePage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Profile'),
+          backgroundColor: Colors.blue,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // Profile picture
               const CircleAvatar(
                 radius: 50,
                 child: Icon(Icons.person, size: 50),
               ),
               const SizedBox(height: 16),
-              // User information
               const Text(
                 'John Doe',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -391,7 +687,6 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 8),
               const Text('john.doe@email.com'),
               const SizedBox(height: 24),
-              // Logout button
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
@@ -414,7 +709,6 @@ class ProfilePage extends StatelessWidget {
 }
 
 // ================ NOTIFICATIONS SECTION ================
-// User notifications display
 class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
 
@@ -425,15 +719,22 @@ class NotificationsPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Notifications'),
+          backgroundColor: Colors.blue,
         ),
-        // Notifications list
         body: ListView.builder(
           itemCount: 5,
           itemBuilder: (context, index) {
-            return ListTile(
-              leading: const Icon(Icons.notifications),
-              title: Text('Notification ${index + 1}'),
-              subtitle: const Text('You have a new message'),
+            return Card(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: Colors.blue,
+                  child: Icon(Icons.notifications, color: Colors.white),
+                ),
+                title: Text('Notification ${index + 1}'),
+                subtitle: const Text('You have a new message'),
+                trailing: const Text('2h ago'),
+              ),
             );
           },
         ),
@@ -443,7 +744,6 @@ class NotificationsPage extends StatelessWidget {
 }
 
 // ================ MESSAGES SECTION ================
-// User messages and conversations
 class MessagesPage extends StatelessWidget {
   const MessagesPage({super.key});
 
@@ -452,17 +752,24 @@ class MessagesPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Messages'),
+        backgroundColor: Colors.blue,
       ),
-      // Messages list
       body: ListView.builder(
         itemCount: 5,
         itemBuilder: (context, index) {
-          return ListTile(
-            leading: const CircleAvatar(
-              child: Icon(Icons.person),
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: ListTile(
+              leading: const CircleAvatar(
+                child: Icon(Icons.person),
+              ),
+              title: Text('Contact ${index + 1}'),
+              subtitle: const Text('Last message...'),
+              trailing: const Text('3:30 PM'),
+              onTap: () {
+                // needs to add more functionality as this is just a test
+              },
             ),
-            title: Text('Contact ${index + 1}'),
-            subtitle: const Text('Last message...'),
           );
         },
       ),
